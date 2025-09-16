@@ -1,0 +1,15 @@
+.club-page {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.club-page h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.club-page p {
+  color: #666;
+  line-height: 1.6;
+}
