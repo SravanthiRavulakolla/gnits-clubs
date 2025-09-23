@@ -55,6 +55,16 @@ const clubApplicationSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  answers: [{
+    questionText: {
+      type: String,
+      required: true
+    },
+    answer: {
+      type: mongoose.Schema.Types.Mixed,
+      required: true
+    }
+  }],
   status: {
     type: String,
     enum: ['applied', 'under_review', 'shortlisted', 'selected', 'rejected'],

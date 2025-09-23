@@ -183,7 +183,10 @@ const EventManagement = () => {
       {showForm && (
         <div className="form-overlay">
           <div className="event-form">
-            <h3>{editingEvent ? 'Edit Event' : 'Create New Event'}</h3>
+            <div className="form-header">
+              <h3>{editingEvent ? 'Edit Event' : 'Create New Event'}</h3>
+              <button type="button" className="close-btn" onClick={resetForm}>×</button>
+            </div>
             
             <form onSubmit={handleSubmit}>
               <div className="form-row">

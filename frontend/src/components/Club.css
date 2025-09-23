@@ -103,10 +103,42 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.post-event-form h2 {
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
-  color: #333;
-  text-align: center;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+}
+
+.form-header h2 {
+  margin: 0;
+  color: #2d3748;
+  font-size: 1.8rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.close-btn {
+  background: rgba(229, 62, 62, 0.1);
+  color: #e53e3e;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.close-btn:hover {
+  background: rgba(229, 62, 62, 0.2);
+  transform: rotate(90deg);
 }
 
 .post-event-form input,
@@ -301,4 +333,17 @@
 
 .event-details strong {
   color: #333;
+}
+
+/* Mobile responsiveness for close button */
+@media (max-width: 768px) {
+  .form-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .close-btn {
+    align-self: center;
+  }
 }

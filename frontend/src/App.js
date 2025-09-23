@@ -9,6 +9,9 @@ import Events from './components/Events';
 import EventManagement from './components/EventManagement';
 import Navigation from './components/Navigation';
 import MyRegistrations from './components/MyRegistrations';
+import Recruitments from './components/Recruitments';
+import RecruitmentManagement from './components/RecruitmentManagement';
+import RegistrationsManagement from './components/RegistrationsManagement';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -101,6 +104,30 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <MyRegistrations />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/recruitments" 
+        element={
+          <ProtectedRoute>
+            <Recruitments />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/manage-recruitments" 
+        element={
+          <ProtectedRoute>
+            <RecruitmentManagement />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/registrations" 
+        element={
+          <ProtectedRoute>
+            <RegistrationsManagement />
           </ProtectedRoute>
         } 
       />

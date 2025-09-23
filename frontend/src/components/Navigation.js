@@ -39,22 +39,43 @@ const Navigation = () => {
           Events
         </button>
 
+        <button 
+          className={`nav-link ${isActive('/recruitments')}`}
+          onClick={() => navigate('/recruitments')}
+        >
+          Recruitments
+        </button>
+
         {user.role === 'student' && (
           <button 
             className={`nav-link ${isActive('/my-registrations')}`}
             onClick={() => navigate('/my-registrations')}
           >
-            My Registrations
+            My Applications
           </button>
         )}
 
         {user.role === 'club_admin' && (
-          <button 
-            className={`nav-link ${isActive('/manage-events')}`}
-            onClick={() => navigate('/manage-events')}
-          >
-            Manage Events
-          </button>
+          <>
+            <button 
+              className={`nav-link ${isActive('/manage-events')}`}
+              onClick={() => navigate('/manage-events')}
+            >
+              Events
+            </button>
+            <button 
+              className={`nav-link ${isActive('/manage-recruitments')}`}
+              onClick={() => navigate('/manage-recruitments')}
+            >
+              Recruitments
+            </button>
+            <button 
+              className={`nav-link ${isActive('/registrations')}`}
+              onClick={() => navigate('/registrations')}
+            >
+              Applications
+            </button>
+          </>
         )}
       </div>
 

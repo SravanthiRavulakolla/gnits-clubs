@@ -167,7 +167,10 @@ router.post('/recruitments/:recruitmentId', [
   body('experience').optional().trim(),
   body('skills').optional().trim(),
   body('portfolio').optional().isURL().withMessage('Portfolio must be a valid URL'),
-  body('resume').optional().isURL().withMessage('Resume must be a valid URL')
+  body('resume').optional().isURL().withMessage('Resume must be a valid URL'),
+  body('answers').optional().isArray().withMessage('Answers must be an array'),
+  body('answers.*.questionText').optional().trim().isLength({ min: 1 }).withMessage('Answer questionText is required'),
+  body('answers.*.answer').optional()
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -179,7 +182,7 @@ router.post('/recruitments/:recruitmentId', [
     }
 
     const { recruitmentId } = req.params;
-    const { phone, appliedPosition, experience, skills, whyJoin, portfolio, resume } = req.body;
+    const { phone, appliedPosition, experience, skills, whyJoin, portfolio, resume, answers } = req.body;
 
     // Check if recruitment exists and is active
     const recruitment = await Recruitment.findById(recruitmentId);
@@ -208,6 +211,39 @@ router.post('/recruitments/:recruitmentId', [
       return res.status(400).json({ message: 'Already applied for this recruitment' });
     }
 
+    // Validate answers against recruitment questions
+    let preparedAnswers = [];
+    if (Array.isArray(recruitment.questions) && recruitment.questions.length > 0) {
+      const questionsByText = new Map(recruitment.questions.map(q => [q.questionText, q]));
+      const providedAnswers = Array.isArray(answers) ? answers : [];
+
+      // Ensure all required questions are answered
+      const missingRequired = recruitment.questions.filter(q => q.required && !providedAnswers.some(a => a.questionText === q.questionText && a.answer !== undefined && a.answer !== null && String(a.answer).trim() !== ''));
+      if (missingRequired.length > 0) {
+        return res.status(400).json({ message: 'Please answer all required questions', missing: missingRequired.map(q => q.questionText) });
+      }
+
+      // Validate select/multiselect options
+      for (const a of providedAnswers) {
+        const q = questionsByText.get(a.questionText);
+        if (!q) continue; // ignore extra answers
+        if ((q.fieldType === 'select' || q.fieldType === 'multiselect') && Array.isArray(q.options) && q.options.length > 0) {
+          if (q.fieldType === 'select') {
+            if (a.answer && !q.options.includes(a.answer)) {
+              return res.status(400).json({ message: `Invalid answer for question: ${q.questionText}` });
+            }
+          } else if (q.fieldType === 'multiselect') {
+            const arr = Array.isArray(a.answer) ? a.answer : [];
+            const invalid = arr.some(val => !q.options.includes(val));
+            if (invalid) {
+              return res.status(400).json({ message: `Invalid answer for question: ${q.questionText}` });
+            }
+          }
+        }
+        preparedAnswers.push({ questionText: a.questionText, answer: a.answer });
+      }
+    }
+
     // Create application
     const application = new ClubApplication({
       recruitment: recruitmentId,
@@ -222,7 +258,8 @@ router.post('/recruitments/:recruitmentId', [
       skills: skills || '',
       whyJoin,
       portfolio: portfolio || '',
-      resume: resume || ''
+      resume: resume || '',
+      answers: preparedAnswers
     });
 
     await application.save();

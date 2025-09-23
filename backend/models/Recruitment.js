@@ -55,6 +55,26 @@ const recruitmentSchema = new mongoose.Schema({
   tags: [{
     type: String,
     trim: true
+  }],
+  questions: [{
+    questionText: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    fieldType: {
+      type: String,
+      enum: ['short_text', 'long_text', 'url', 'number', 'select', 'multiselect'],
+      default: 'long_text'
+    },
+    required: {
+      type: Boolean,
+      default: true
+    },
+    options: [{
+      type: String,
+      trim: true
+    }]
   }]
 }, {
   timestamps: true

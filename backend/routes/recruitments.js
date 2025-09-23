@@ -20,10 +20,28 @@ router.get('/', async (req, res) => {
       .skip((page - 1) * limit)
       .exec();
 
+    // Transform data for frontend compatibility
+    const transformedRecruitments = recruitments.map(recruitment => ({
+      _id: recruitment._id,
+      title: recruitment.title,
+      description: recruitment.description,
+      clubName: recruitment.clubName,
+      requirements: recruitment.eligibility,
+      responsibilities: recruitment.positions[0]?.requirements || '',
+      deadline: recruitment.applicationDeadline,
+      questions: recruitment.questions.map(q => ({
+        _id: q._id,
+        question: q.questionText,
+        type: q.fieldType === 'short_text' ? 'text' : q.fieldType === 'long_text' ? 'textarea' : q.fieldType === 'url' ? 'email' : q.fieldType === 'number' ? 'number' : 'text',
+        required: q.required
+      })),
+      createdAt: recruitment.createdAt
+    }));
+
     const total = await Recruitment.countDocuments(filter);
 
     res.json({
-      recruitments,
+      recruitments: transformedRecruitments,
       totalPages: Math.ceil(total / limit),
       currentPage: page,
       total
@@ -56,13 +74,7 @@ router.post('/', [
   auth,
   isClubAdmin,
   body('title').trim().isLength({ min: 1 }).withMessage('Title is required'),
-  body('description').trim().isLength({ min: 1 }).withMessage('Description is required'),
-  body('eligibility').trim().isLength({ min: 1 }).withMessage('Eligibility is required'),
-  body('applicationDeadline').isISO8601().withMessage('Valid deadline is required'),
-  body('positions').isArray({ min: 1 }).withMessage('At least one position is required'),
-  body('positions.*.role').trim().isLength({ min: 1 }).withMessage('Position role is required'),
-  body('positions.*.count').isInt({ min: 1 }).withMessage('Position count must be at least 1'),
-  body('positions.*.requirements').trim().isLength({ min: 1 }).withMessage('Position requirements are required')
+  body('description').trim().isLength({ min: 1 }).withMessage('Description is required')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -76,29 +88,41 @@ router.post('/', [
     const {
       title,
       description,
-      positions,
-      eligibility,
-      applicationDeadline,
-      applicationProcess,
-      tags
+      requirements,
+      responsibilities,
+      deadline,
+      questions
     } = req.body;
 
     // Check if the deadline is in the future
-    const deadline = new Date(applicationDeadline);
-    if (deadline < new Date()) {
-      return res.status(400).json({ message: 'Application deadline must be in the future' });
+    let applicationDeadline = null;
+    if (deadline) {
+      applicationDeadline = new Date(deadline);
+      if (applicationDeadline < new Date()) {
+        return res.status(400).json({ message: 'Application deadline must be in the future' });
+      }
     }
+
+    // Transform questions to match the model
+    const transformedQuestions = questions ? questions.map(q => ({
+      questionText: q.question,
+      fieldType: q.type === 'text' ? 'short_text' : q.type === 'textarea' ? 'long_text' : q.type === 'email' ? 'url' : q.type === 'number' ? 'number' : 'long_text',
+      required: q.required || false
+    })) : [];
 
     const recruitment = new Recruitment({
       title,
       description,
-      positions,
-      eligibility,
-      applicationDeadline: deadline,
+      eligibility: requirements || 'No specific requirements',
+      positions: [{
+        role: title,
+        count: 1,
+        requirements: responsibilities || 'Various responsibilities'
+      }],
+      applicationDeadline: applicationDeadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now if no deadline
       clubName: req.user.clubName,
       createdBy: req.user._id,
-      applicationProcess,
-      tags: tags || []
+      questions: transformedQuestions
     });
 
     await recruitment.save();
@@ -213,10 +237,28 @@ router.get('/club/:clubName', async (req, res) => {
       .skip((page - 1) * limit)
       .exec();
 
+    // Transform data for frontend compatibility
+    const transformedRecruitments = recruitments.map(recruitment => ({
+      _id: recruitment._id,
+      title: recruitment.title,
+      description: recruitment.description,
+      clubName: recruitment.clubName,
+      requirements: recruitment.eligibility,
+      responsibilities: recruitment.positions[0]?.requirements || '',
+      deadline: recruitment.applicationDeadline,
+      questions: recruitment.questions.map(q => ({
+        _id: q._id,
+        question: q.questionText,
+        type: q.fieldType === 'short_text' ? 'text' : q.fieldType === 'long_text' ? 'textarea' : q.fieldType === 'url' ? 'email' : q.fieldType === 'number' ? 'number' : 'text',
+        required: q.required
+      })),
+      createdAt: recruitment.createdAt
+    }));
+
     const total = await Recruitment.countDocuments(filter);
 
     res.json({
-      recruitments,
+      recruitments: transformedRecruitments,
       totalPages: Math.ceil(total / limit),
       currentPage: page,
       total

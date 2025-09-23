@@ -1,4 +1,4 @@
-.event-management {
+.recruitment-management {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 40px 20px;
@@ -26,11 +26,12 @@
   color: white;
   border: none;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 25px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary:hover {
@@ -39,11 +40,11 @@
 }
 
 .btn-secondary {
-  background: #e2e8f0;
-  color: #2d3748;
-  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 25px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -51,7 +52,7 @@
 }
 
 .btn-secondary:hover {
-  background: #cbd5e0;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .btn-edit {
@@ -59,7 +60,7 @@
   color: white;
   border: none;
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 15px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -67,6 +68,7 @@
 
 .btn-edit:hover {
   background: #2c5aa0;
+  transform: translateY(-1px);
 }
 
 .btn-delete {
@@ -74,7 +76,7 @@
   color: white;
   border: none;
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 15px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -82,6 +84,7 @@
 
 .btn-delete:hover {
   background: #c53030;
+  transform: translateY(-1px);
 }
 
 .form-overlay {
@@ -91,6 +94,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,15 +102,17 @@
   padding: 20px;
 }
 
-.event-form {
-  background: white;
+.recruitment-form {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
   padding: 30px;
-  border-radius: 12px;
+  border-radius: 20px;
   width: 100%;
-  max-width: 700px;
+  max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .form-header {
@@ -170,9 +176,9 @@
   width: 100%;
   padding: 12px;
   border: 2px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
   box-sizing: border-box;
 }
 
@@ -189,24 +195,110 @@
   font-family: inherit;
 }
 
+.questions-section {
+  margin-bottom: 20px;
+}
+
+.questions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.questions-header label {
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+}
+
+.add-question-btn {
+  background: linear-gradient(135deg, #48bb78 0%, #38b2ac 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-question-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(72, 187, 120, 0.3);
+}
+
+.question-item {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.question-controls {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.question-controls input[type="text"] {
+  margin: 0;
+}
+
+.question-controls select {
+  margin: 0;
+}
+
+.question-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.question-controls label input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.remove-question-btn {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.remove-question-btn:hover {
+  background: #c53030;
+}
+
 .form-actions {
   display: flex;
   gap: 15px;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 30px;
   padding-top: 20px;
   border-top: 1px solid #e2e8f0;
 }
 
-.events-list {
+.recruitments-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 25px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.event-card {
+.recruitment-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: 20px;
@@ -218,7 +310,7 @@
   overflow: hidden;
 }
 
-.event-card::before {
+.recruitment-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -229,65 +321,100 @@
   transition: left 0.5s;
 }
 
-.event-card:hover::before {
+.recruitment-card:hover::before {
   left: 100%;
 }
 
-.event-card:hover {
+.recruitment-card:hover {
   transform: translateY(-10px) scale(1.02);
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
 }
 
-.event-header {
+.recruitment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 15px;
 }
 
-.event-header h3 {
+.recruitment-header h3 {
   color: #2d3748;
   margin: 0;
   font-size: 1.4rem;
   font-weight: 700;
   line-height: 1.3;
+  flex: 1;
 }
 
+.recruitment-status {
+  margin-left: 15px;
+}
 
-.event-description {
+.status-open {
+  background: linear-gradient(135deg, #48bb78, #38b2ac);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-closed {
+  background: linear-gradient(135deg, #e53e3e, #c53030);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.recruitment-description {
   color: #4a5568;
   margin: 0 0 20px 0;
   line-height: 1.6;
+  font-size: 0.95rem;
 }
 
-.event-details {
+.recruitment-details {
   margin-bottom: 20px;
 }
 
 .detail-item {
   margin-bottom: 8px;
   color: #2d3748;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .detail-item strong {
   color: #1a202c;
 }
 
-.event-tags {
+.questions-preview {
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 10px;
+  padding: 15px;
   margin-bottom: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
 }
 
-.tag {
-  background: #e2e8f0;
+.questions-preview strong {
   color: #2d3748;
-  padding: 4px 10px;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
 }
 
-.event-actions {
+.questions-preview ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #4a5568;
+}
+
+.questions-preview li {
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+.recruitment-actions {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
@@ -295,41 +422,47 @@
 
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
-  color: #718096;
+  padding: 80px 20px;
+  color: white;
+  opacity: 0.8;
 }
 
 .empty-state p {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   margin: 0;
 }
 
 .loading {
   text-align: center;
-  padding: 40px;
-  font-size: 1.1rem;
-  color: #718096;
+  padding: 80px 20px;
+  font-size: 1.2rem;
+  color: white;
 }
 
 .error-message {
-  background: rgba(254, 178, 178, 0.1);
+  background: rgba(254, 178, 178, 0.9);
   border: 1px solid #feb2b2;
   color: #c53030;
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 15px;
   margin-bottom: 20px;
+  backdrop-filter: blur(10px);
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-  .event-management {
-    padding: 15px;
+  .recruitment-management {
+    padding: 20px 15px;
   }
   
   .management-header {
     flex-direction: column;
     gap: 15px;
     text-align: center;
+  }
+  
+  .management-header h2 {
+    font-size: 2rem;
   }
   
   .form-row {
@@ -341,7 +474,7 @@
     padding: 10px;
   }
   
-  .event-form {
+  .recruitment-form {
     padding: 20px;
     margin: 10px;
   }
@@ -350,12 +483,25 @@
     flex-direction: column;
   }
   
-  .event-header {
+  .recruitments-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .recruitment-header {
     flex-direction: column;
     gap: 10px;
   }
   
-  .event-actions {
+  .recruitment-actions {
     justify-content: center;
+  }
+  
+  .question-controls {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .question-controls label {
+    justify-self: start;
   }
 }

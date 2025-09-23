@@ -154,7 +154,14 @@ const Club = () => {
       {showPostForm && (
         <div className="modal-overlay">
           <div className="post-event-form">
-            <h2>{editingEventId ? 'Edit Event' : 'Post New Event'}</h2>
+            <div className="form-header">
+              <h2>{editingEventId ? 'Edit Event' : 'Post New Event'}</h2>
+              <button type="button" className="close-btn" onClick={() => {
+                setShowPostForm(false);
+                setEditingEventId(null);
+                setFormData({ title: '', description: '', date: '', time: '', venue: '', eventType: 'other', maxParticipants: '', registrationDeadline: '' });
+              }}>×</button>
+            </div>
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
