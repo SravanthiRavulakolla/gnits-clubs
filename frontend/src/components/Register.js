@@ -256,8 +256,13 @@ const Register = ({ onSwitchToLogin }) => {
           <p>
             Already have an account?{' '}
             <button 
+              type="button"
               className="switch-auth-button"
-              onClick={onSwitchToLogin}
+              onClick={(e) => {
+                e.preventDefault();
+                console.log('Sign In button clicked');
+                onSwitchToLogin(e);
+              }}
             >
               Sign In
             </button>

@@ -17,6 +17,18 @@ const Events = () => {
 
   useEffect(() => {
     fetchEvents();
+    
+    // Set up interval to refresh events every 30 seconds
+    const interval = setInterval(fetchEvents, 30000);
+    
+    // Listen for focus events to refresh when user returns to tab
+    const handleFocus = () => fetchEvents();
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   useEffect(() => {
@@ -127,8 +139,19 @@ const Events = () => {
   return (
     <div className="events-page">
       <div className="events-header">
-        <h1>Upcoming Events</h1>
-        <p>Discover exciting events from all clubs at GNITS</p>
+        <div className="header-content">
+          <div>
+            <h1>Upcoming Events</h1>
+            <p>Discover exciting events from all clubs at GNITS</p>
+          </div>
+          <button 
+            className="refresh-btn" 
+            onClick={fetchEvents}
+            disabled={loading}
+          >
+            {loading ? '🔄' : '↻'} Refresh
+          </button>
+        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}

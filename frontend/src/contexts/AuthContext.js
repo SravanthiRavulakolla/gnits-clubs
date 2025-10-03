@@ -22,6 +22,7 @@ const authReducer = (state, action) => {
       };
     case 'AUTH_SUCCESS':
       localStorage.setItem('token', action.payload.token);
+
       return {
         ...state,
         isAuthenticated: true,
@@ -110,6 +111,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     dispatch({ type: 'AUTH_LOADING' });
     try {
+      console.log('Login attempt:', { email, password: '***' });
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
@@ -119,6 +121,8 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = await response.json();
+      console.log('Login response status:', response.status);
+      console.log('Login response data:', JSON.stringify(data, null, 2));
 
       if (response.ok) {
         dispatch({
@@ -134,6 +138,7 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: data.message };
       }
     } catch (error) {
+      console.error('Login error:', error);
       dispatch({ type: 'AUTH_ERROR', payload: error.message });
       return { success: false, error: error.message };
     }
@@ -143,6 +148,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     dispatch({ type: 'AUTH_LOADING' });
     try {
+      console.log('Register attempt:', userData);
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
@@ -152,6 +158,8 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = await response.json();
+      console.log('Register response status:', response.status);
+      console.log('Register response data:', JSON.stringify(data, null, 2));
 
       if (response.ok) {
         dispatch({
@@ -167,6 +175,7 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: data.message, errors: data.errors };
       }
     } catch (error) {
+      console.error('Register error:', error);
       dispatch({ type: 'AUTH_ERROR', payload: error.message });
       return { success: false, error: error.message };
     }

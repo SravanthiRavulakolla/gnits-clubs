@@ -7,7 +7,12 @@ const Club = () => {
   const { clubId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [events, setEvents] = useState([]);
+  const [clubData, setClubData] = useState(null);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [showMembershipModal, setShowMembershipModal] = useState(false);
+  const [applicationMessage, setApplicationMessage] = useState('');
   const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
   const [showPostForm, setShowPostForm] = useState(false);
   const [editingEventId, setEditingEventId] = useState(null);
@@ -35,21 +40,36 @@ const Club = () => {
   const isAdmin = user?.role === 'club_admin' && user?.clubName === clubName;
 
   useEffect(() => {
-    fetchEvents();
+    fetchClubData();
   }, [clubName]);
+
+  const fetchClubData = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/clubs/${clubName}`);
+      if (response.ok) {
+        const data = await response.json();
+        setClubData(data.club);
+        setUpcomingEvents(data.upcomingEvents || []);
+        setPastEvents(data.pastEvents || []);
+      }
+    } catch (error) {
+      console.error('Error fetching club data:', error);
+    }
+  };
 
   const fetchEvents = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/events/club/${clubName}`);
       if (response.ok) {
         const data = await response.json();
-        setEvents(data.events || []);
-      } else {
-        setEvents([]);
+        const currentDate = new Date();
+        const upcoming = data.events?.filter(event => new Date(event.date) >= currentDate) || [];
+        const past = data.events?.filter(event => new Date(event.date) < currentDate) || [];
+        setUpcomingEvents(upcoming);
+        setPastEvents(past);
       }
     } catch (error) {
       console.error('Error fetching events:', error);
-      setEvents([]);
     }
   };
 
@@ -58,7 +78,8 @@ const Club = () => {
   };
 
   const handleEdit = (eventId) => {
-    const eventToEdit = events.find(event => event._id === eventId);
+    const allEvents = [...upcomingEvents, ...pastEvents];
+    const eventToEdit = allEvents.find(event => event._id === eventId);
     if (eventToEdit) {
       setEditingEventId(eventId);
       setFormData({
@@ -87,7 +108,7 @@ const Club = () => {
         });
 
         if (response.ok) {
-          setEvents(events.filter(event => event._id !== eventId));
+          fetchClubData();
         } else {
           alert('Failed to delete event. Please try again.');
         }
@@ -95,6 +116,31 @@ const Club = () => {
         console.error('Error deleting event:', error);
         alert('Error deleting event. Please try again.');
       }
+    }
+  };
+
+  const handleMembershipApply = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/clubs/${clubName}/apply`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ message: applicationMessage })
+      });
+
+      if (response.ok) {
+        alert('Application submitted successfully!');
+        setShowMembershipModal(false);
+        setApplicationMessage('');
+      } else {
+        alert('Failed to submit application. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      alert('Error submitting application. Please try again.');
     }
   };
 
@@ -124,7 +170,7 @@ const Club = () => {
         setFormData({ title: '', description: '', date: '', time: '', venue: '', eventType: 'other', maxParticipants: '', registrationDeadline: '' });
         setShowPostForm(false);
         setEditingEventId(null);
-        fetchEvents();
+        fetchClubData();
       } else {
         const error = await response.json();
         alert(error.message || 'Failed to save event');
@@ -134,6 +180,14 @@ const Club = () => {
       alert('Failed to save event. Please try again.');
     }
   };
+
+  if (!clubData) {
+    return (
+      <div className="club-page">
+        <div className="loading">Loading club information...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="club-page">
@@ -149,6 +203,39 @@ const Club = () => {
             Post Event
           </button>
         )}
+      </div>
+
+      <div className="club-tabs">
+        <button 
+          className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
+          onClick={() => setActiveTab('overview')}
+        >
+          Overview
+        </button>
+        <button 
+          className={`tab ${activeTab === 'people' ? 'active' : ''}`}
+          onClick={() => setActiveTab('people')}
+        >
+          Popular People
+        </button>
+        <button 
+          className={`tab ${activeTab === 'upcoming' ? 'active' : ''}`}
+          onClick={() => setActiveTab('upcoming')}
+        >
+          Upcoming Events
+        </button>
+        <button 
+          className={`tab ${activeTab === 'past' ? 'active' : ''}`}
+          onClick={() => setActiveTab('past')}
+        >
+          Past Events
+        </button>
+        <button 
+          className={`tab ${activeTab === 'membership' ? 'active' : ''}`}
+          onClick={() => setActiveTab('membership')}
+        >
+          Membership
+        </button>
       </div>
 
       {showPostForm && (
@@ -244,42 +331,143 @@ const Club = () => {
         </div>
       )}
 
-      <div className="events-section">
-        <h2>Events</h2>
-        {events.length === 0 ? (
-          <p className="no-events">No events posted yet.</p>
-        ) : (
-          <div className="events-grid">
-            {events.map((event) => (
-              <div key={event._id} className="event-card">
-                {isAdmin && (
-                  <div className="event-actions">
-                    <button className="edit-btn" onClick={() => handleEdit(event._id)}>
-                      Edit
-                    </button>
-                    <button className="delete-btn" onClick={() => handleDelete(event._id)}>
-                      Delete
-                    </button>
+      <div className="club-content">
+        {activeTab === 'overview' && (
+          <div className="overview-section">
+            <h2>About {clubName}</h2>
+            <p className="club-description">{clubData.description}</p>
+          </div>
+        )}
+
+        {activeTab === 'people' && (
+          <div className="people-section">
+            <h2>Popular People</h2>
+            <div className="people-grid">
+              {clubData.popularPeople?.map((person, index) => (
+                <div key={index} className="person-card">
+                  <div className="person-avatar">
+                    {person.name.charAt(0)}
                   </div>
-                )}
-                <h3>{event.title}</h3>
-                <p className="event-description">{event.description}</p>
-                <div className="event-details">
-                  <p><strong>Date:</strong> {new Date(event.date).toLocaleDateString()}</p>
-                  <p><strong>Time:</strong> {event.time}</p>
-                  <p><strong>Venue:</strong> {event.venue}</p>
-                  {event.maxParticipants && (
-                    <p><strong>Max Participants:</strong> {event.maxParticipants}</p>
-                  )}
-                  {event.registrationDeadline && (
-                    <p><strong>Registration Deadline:</strong> {new Date(event.registrationDeadline).toLocaleDateString()}</p>
-                  )}
+                  <h3>{person.name}</h3>
+                  <p className="person-position">{person.position}</p>
+                  <p className="person-bio">{person.bio}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'upcoming' && (
+          <div className="events-section">
+            <h2>Upcoming Events</h2>
+            {upcomingEvents.length === 0 ? (
+              <p className="no-events">No upcoming events.</p>
+            ) : (
+              <div className="events-grid">
+                {upcomingEvents.map((event) => (
+                  <div key={event._id} className="event-card">
+                    {isAdmin && (
+                      <div className="event-actions">
+                        <button className="edit-btn" onClick={() => handleEdit(event._id)}>Edit</button>
+                        <button className="delete-btn" onClick={() => handleDelete(event._id)}>Delete</button>
+                      </div>
+                    )}
+                    <h3>{event.title}</h3>
+                    <p className="event-description">{event.description}</p>
+                    <div className="event-details">
+                      <p><strong>Date:</strong> {new Date(event.date).toLocaleDateString()}</p>
+                      <p><strong>Time:</strong> {event.time}</p>
+                      <p><strong>Venue:</strong> {event.venue}</p>
+                      {event.maxParticipants && <p><strong>Max Participants:</strong> {event.maxParticipants}</p>}
+                      {event.registrationDeadline && <p><strong>Registration Deadline:</strong> {new Date(event.registrationDeadline).toLocaleDateString()}</p>}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+          </div>
+        )}
+
+        {activeTab === 'past' && (
+          <div className="events-section">
+            <h2>Past Events</h2>
+            {pastEvents.length === 0 ? (
+              <p className="no-events">No past events.</p>
+            ) : (
+              <div className="events-grid">
+                {pastEvents.map((event) => (
+                  <div key={event._id} className="event-card past-event">
+                    <h3>{event.title}</h3>
+                    <p className="event-description">{event.description}</p>
+                    <div className="event-details">
+                      <p><strong>Date:</strong> {new Date(event.date).toLocaleDateString()}</p>
+                      <p><strong>Time:</strong> {event.time}</p>
+                      <p><strong>Venue:</strong> {event.venue}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'membership' && (
+          <div className="membership-section">
+            <h2>Membership Drive</h2>
+            {clubData.membershipDrive?.isActive ? (
+              <div className="membership-drive">
+                <h3>{clubData.membershipDrive.title}</h3>
+                <p className="membership-description">{clubData.membershipDrive.description}</p>
+                <div className="membership-details">
+                  <p><strong>Deadline:</strong> {new Date(clubData.membershipDrive.deadline).toLocaleDateString()}</p>
+                  <div className="requirements">
+                    <h4>Requirements:</h4>
+                    <ul>
+                      {clubData.membershipDrive.requirements?.map((req, index) => (
+                        <li key={index}>{req}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                {user?.role === 'student' && (
+                  <button className="apply-btn" onClick={() => setShowMembershipModal(true)}>
+                    Apply for Membership
+                  </button>
+                )}
+              </div>
+            ) : (
+              <p className="no-membership">No active membership drive at the moment.</p>
+            )}
           </div>
         )}
       </div>
+
+      {showMembershipModal && (
+        <div className="modal-overlay">
+          <div className="membership-modal">
+            <div className="modal-header">
+              <h2>Apply for {clubName} Membership</h2>
+              <button className="close-btn" onClick={() => setShowMembershipModal(false)}>×</button>
+            </div>
+            <div className="modal-content">
+              <textarea
+                placeholder="Why do you want to join this club? (Optional)"
+                value={applicationMessage}
+                onChange={(e) => setApplicationMessage(e.target.value)}
+                rows="4"
+              />
+              <div className="modal-buttons">
+                <button className="submit-btn" onClick={handleMembershipApply}>
+                  Submit Application
+                </button>
+                <button className="cancel-btn" onClick={() => setShowMembershipModal(false)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

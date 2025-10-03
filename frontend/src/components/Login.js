@@ -100,8 +100,13 @@ const Login = ({ onSwitchToRegister }) => {
           <p>
             Don't have an account?{' '}
             <button 
+              type="button"
               className="switch-auth-button"
-              onClick={onSwitchToRegister}
+              onClick={(e) => {
+                e.preventDefault();
+                console.log('Create Account button clicked');
+                onSwitchToRegister(e);
+              }}
             >
               Create Account
             </button>

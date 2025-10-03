@@ -169,6 +169,10 @@
   cursor: pointer;
   text-decoration: underline;
   transition: color 0.3s ease;
+  padding: 4px 8px;
+  font-size: inherit;
+  z-index: 10;
+  position: relative;
 }
 
 .switch-auth-button:hover {

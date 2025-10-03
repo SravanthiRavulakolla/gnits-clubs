@@ -32,27 +32,27 @@ const Navigation = () => {
           Dashboard
         </button>
         
-        <button 
-          className={`nav-link ${isActive('/events')}`}
-          onClick={() => navigate('/events')}
-        >
-          Events
-        </button>
-
-        <button 
-          className={`nav-link ${isActive('/recruitments')}`}
-          onClick={() => navigate('/recruitments')}
-        >
-          Recruitments
-        </button>
-
         {user.role === 'student' && (
-          <button 
-            className={`nav-link ${isActive('/my-registrations')}`}
-            onClick={() => navigate('/my-registrations')}
-          >
-            My Applications
-          </button>
+          <>
+            <button 
+              className={`nav-link ${isActive('/events')}`}
+              onClick={() => navigate('/events')}
+            >
+              Events
+            </button>
+            <button 
+              className={`nav-link ${isActive('/recruitments')}`}
+              onClick={() => navigate('/recruitments')}
+            >
+              Recruitments
+            </button>
+            <button 
+              className={`nav-link ${isActive('/my-registrations')}`}
+              onClick={() => navigate('/my-registrations')}
+            >
+              My Applications
+            </button>
+          </>
         )}
 
         {user.role === 'club_admin' && (
@@ -61,19 +61,19 @@ const Navigation = () => {
               className={`nav-link ${isActive('/manage-events')}`}
               onClick={() => navigate('/manage-events')}
             >
-              Events
+              Manage Events
             </button>
             <button 
               className={`nav-link ${isActive('/manage-recruitments')}`}
               onClick={() => navigate('/manage-recruitments')}
             >
-              Recruitments
+              Manage Recruitments
             </button>
             <button 
               className={`nav-link ${isActive('/registrations')}`}
               onClick={() => navigate('/registrations')}
             >
-              Applications
+              View Applications
             </button>
           </>
         )}
