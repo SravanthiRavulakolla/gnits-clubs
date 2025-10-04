@@ -147,22 +147,47 @@ const Dashboard = () => {
                     <div className="stat-number">{adminStats.totalEvents || 0}</div>
                     <p>Events created</p>
                   </div>
-                  <div className="stat-card">
-                    <h3>👥 Total Registrations</h3>
+                  <div className="stat-card" onClick={() => navigate('/registrations')} style={{cursor: 'pointer'}}>
+                    <h3>👥 Event Registrations</h3>
                     <div className="stat-number">{adminStats.totalRegistrations || 0}</div>
-                    <p>Student registrations</p>
+                    <p>Click to view registrations</p>
                   </div>
-                  <div className="stat-card">
-                    <h3>📝 Membership Applications</h3>
-                    <div className="stat-number">{adminStats.membershipApplications || 0}</div>
-                    <p>Pending applications</p>
-                  </div>
+              <div className="stat-card" onClick={() => navigate('/registrations')} style={{cursor: 'pointer'}}>
+                <h3>📝 Membership Applications</h3>
+                <div className="stat-number">{adminStats.membershipApplications || 0}</div>
+                <p>Click to view applications</p>
+              </div>
                   <div className="stat-card">
                     <h3>🎯 Upcoming Events</h3>
                     <div className="stat-number">{adminStats.upcomingEvents || 0}</div>
                     <p>Events scheduled</p>
                   </div>
                 </div>
+              </div>
+            )}
+            
+            {adminStats && adminStats.recentApplications && adminStats.recentApplications.length > 0 && (
+              <div className="recent-applications">
+                <h3>Recent Applications</h3>
+                <div className="applications-preview">
+                  {adminStats.recentApplications.map(app => (
+                    <div key={app._id} className="application-preview-card">
+                      <div className="applicant-info">
+                        <strong>{app.student?.name || app.studentName}</strong>
+                        <span className="recruitment-title">Applied to: {app.recruitment?.title}</span>
+                        <span className="application-date">
+                          {new Date(app.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button 
+                  className="view-all-btn"
+                  onClick={() => navigate('/registrations')}
+                >
+                  View All Applications
+                </button>
               </div>
             )}
             

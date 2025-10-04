@@ -42,37 +42,143 @@ const RecruitmentApplication = ({ recruitment, onClose, onComplete }) => {
         return;
       }
 
+      // Prepare answers in the format expected by backend
+      const answers = recruitment.questions?.map(question => ({
+        questionText: question.question,
+        answer: formData[question._id] || ''
+      })) || [];
+
+      console.log('Form data before processing:', formData);
+      console.log('User data:', { name: user.name, email: user.email, phone: user.phone });
+      
+      // Clean up portfolio and resume URLs - remove placeholder values
+      let portfolioUrl = formData.portfolio || '';
+      if (portfolioUrl === 'https://your-portfolio.com' || portfolioUrl.trim() === '') {
+        portfolioUrl = '';
+      }
+      
+      let resumeUrl = formData.resume || '';
+      if (resumeUrl === 'https://link-to-your-resume.com' || resumeUrl.trim() === '') {
+        resumeUrl = '';
+      }
+      
       const applicationData = {
-        recruitmentId: recruitment._id,
-        responses: recruitment.questions?.map(question => ({
-          questionId: question._id,
-          question: question.question,
-          answer: formData[question._id] || ''
-        })) || []
+        phone: formData.phone || user.phone || '',
+        appliedPosition: recruitment.title || recruitment.positions?.[0]?.role || 'Member',
+        experience: formData.experience || '',
+        skills: formData.skills || '',
+        whyJoin: formData.whyJoin || '',
+        portfolio: portfolioUrl,
+        resume: resumeUrl,
+        answers: answers
       };
+      
+      console.log('Final application data:', applicationData);
+      
+      // Validate required fields to match backend validation
+      const errors = [];
+      
+      if (!applicationData.appliedPosition || applicationData.appliedPosition.trim() === '') {
+        errors.push('Applied position is required');
+      }
+      if (!applicationData.whyJoin || applicationData.whyJoin.trim() === '') {
+        errors.push('Please explain why you want to join this club');
+      }
+      
+      // Check phone validation if provided
+      if (applicationData.phone && applicationData.phone.trim() !== '') {
+        // Basic phone validation
+        const phoneRegex = /^[\d\s\+\-\(\)]{10,}$/;
+        if (!phoneRegex.test(applicationData.phone.replace(/\s/g, ''))) {
+          errors.push('Please enter a valid phone number');
+        }
+      }
+      
+      if (errors.length > 0) {
+        const errorMessage = `Please fix the following errors:\n${errors.join('\n')}`;
+        setError(errorMessage);
+        setSubmitting(false);
+        return;
+      }
 
-      const response = await fetch(`${API_BASE_URL}/registrations/recruitments/${recruitment._id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(applicationData)
-      });
+      console.log('=== FRONTEND APPLICATION SUBMISSION ===');
+      console.log('Recruitment ID:', recruitment._id);
+      console.log('Recruitment Title:', recruitment.title);
+      console.log('Club Name:', recruitment.clubName);
+      console.log('User:', user.name, user.email);
+      console.log('API Base URL:', API_BASE_URL);
+      console.log('Token exists:', !!localStorage.getItem('token'));
+      console.log('Submitting application data:', applicationData);
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found. Please login again.');
+      }
+      
+      const url = `${API_BASE_URL}/registrations/recruitments/${recruitment._id}`;
+      console.log('Making request to:', url);
+      
+      let response;
+      try {
+        response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(applicationData)
+        });
+        console.log('Response received:', response.status, response.statusText);
+      } catch (fetchError) {
+        console.error('Fetch request failed:', fetchError);
+        throw new Error(`Network request failed: ${fetchError.message}`);
+      }
 
-      const data = await response.json();
+      let data;
+      const responseText = await response.text();
+      console.log('Raw response text:', responseText);
+      
+      if (!responseText) {
+        throw new Error('Empty response from server');
+      }
+      
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Failed to parse response JSON:', parseError);
+        console.error('Response text:', responseText);
+        throw new Error(`Invalid JSON response from server: ${responseText.substring(0, 100)}`);
+      }
+      console.log('Parsed response data:', data);
 
       if (response.ok) {
-        alert('Application submitted successfully!');
+        console.log('✅ Application submitted successfully');
+        alert(`Application submitted successfully to ${recruitment.clubName}!`);
         onComplete();
       } else {
-        setError(data.message || 'Failed to submit application');
+        console.error('❌ Application failed:', response.status, data);
+        
+        // Log and display detailed validation errors
+        if (data.errors && Array.isArray(data.errors)) {
+          console.error('Validation errors:', data.errors);
+          const errorDetails = data.errors.map(err => `- ${err.msg || err.message || err}`).join('\n');
+          const errorMessage = `Validation Failed:\n${errorDetails}`;
+          setError(errorMessage);
+          
+          // Also show in alert for immediate visibility
+          alert(`Application failed due to validation errors:\n${errorDetails}`);
+        } else {
+          const errorMessage = data.message || data.error || `Failed to submit application (${response.status})`;
+          setError(errorMessage);
+        }
       }
     } catch (error) {
-      setError('Error submitting application. Please try again.');
-      console.error('Application submission error:', error);
+      console.error('❌ Application submission error:', error);
+      const errorMessage = error.message || 'Error submitting application. Please try again.';
+      setError(errorMessage);
     } finally {
       setSubmitting(false);
+      console.log('=== APPLICATION SUBMISSION END ===\n');
     }
   };
 
@@ -171,9 +277,80 @@ const RecruitmentApplication = ({ recruitment, onClose, onComplete }) => {
             </div>
           </div>
 
+          {/* Basic Application Fields */}
+          <div className="basic-fields">
+            <h3>Application Details</h3>
+            
+            <div className="question-group">
+              <label>
+                Phone Number <span className="required">*</span>
+              </label>
+              <input
+                type="tel"
+                value={formData.phone || ''}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
+                placeholder="Enter your phone number"
+                required
+              />
+            </div>
+
+            <div className="question-group">
+              <label>
+                Why do you want to join this club? <span className="required">*</span>
+              </label>
+              <textarea
+                value={formData.whyJoin || ''}
+                onChange={(e) => handleInputChange('whyJoin', e.target.value)}
+                rows="3"
+                placeholder="Tell us why you're interested in joining..."
+                required
+              />
+            </div>
+
+            <div className="question-group">
+              <label>Experience (Optional)</label>
+              <textarea
+                value={formData.experience || ''}
+                onChange={(e) => handleInputChange('experience', e.target.value)}
+                rows="2"
+                placeholder="Any relevant experience..."
+              />
+            </div>
+
+            <div className="question-group">
+              <label>Skills (Optional)</label>
+              <input
+                type="text"
+                value={formData.skills || ''}
+                onChange={(e) => handleInputChange('skills', e.target.value)}
+                placeholder="List your relevant skills..."
+              />
+            </div>
+
+            <div className="question-group">
+              <label>Portfolio URL (Optional)</label>
+              <input
+                type="url"
+                value={formData.portfolio || ''}
+                onChange={(e) => handleInputChange('portfolio', e.target.value)}
+                placeholder="https://your-portfolio.com"
+              />
+            </div>
+
+            <div className="question-group">
+              <label>Resume URL (Optional)</label>
+              <input
+                type="url"
+                value={formData.resume || ''}
+                onChange={(e) => handleInputChange('resume', e.target.value)}
+                placeholder="https://link-to-your-resume.com"
+              />
+            </div>
+          </div>
+
           {recruitment.questions && recruitment.questions.length > 0 && (
             <div className="custom-questions">
-              <h3>Application Questions</h3>
+              <h3>Additional Questions</h3>
               {recruitment.questions.map((question, index) => (
                 <div key={question._id || index} className="question-group">
                   <label>
@@ -193,6 +370,30 @@ const RecruitmentApplication = ({ recruitment, onClose, onComplete }) => {
               disabled={submitting}
             >
               {submitting ? 'Submitting...' : 'Submit Application'}
+            </button>
+            <button
+              type="button"
+              className="test-btn"
+              onClick={async () => {
+                console.log('🧪 TESTING API CONNECTION...');
+                try {
+                  console.log('Testing API endpoint:', `${API_BASE_URL}/api`);
+                  const testResponse = await fetch(`${API_BASE_URL}/api`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                  });
+                  console.log('Test response status:', testResponse.status);
+                  const testData = await testResponse.json();
+                  console.log('✅ API Test successful:', testData);
+                  alert('API connection test successful!');
+                } catch (err) {
+                  console.error('❌ API Test failed:', err);
+                  alert(`API test failed: ${err.message}`);
+                }
+              }}
+              disabled={submitting}
+              style={{backgroundColor: '#ff9500', marginLeft: '10px'}}
+            >
+              Test API
             </button>
             <button
               type="button"

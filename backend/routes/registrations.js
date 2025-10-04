@@ -124,7 +124,7 @@ router.delete('/events/:eventId', auth, isStudent, async (req, res) => {
 });
 
 // Get student's event registrations
-router.get('/events/my', auth, isStudent, async (req, res) => {
+router.get('/events/my', auth, async (req, res) => {
   try {
     const { limit = 10, page = 1 } = req.query;
 
@@ -160,21 +160,26 @@ router.get('/events/my', auth, isStudent, async (req, res) => {
 // Apply to a recruitment (students only)
 router.post('/recruitments/:recruitmentId', [
   auth,
-  isStudent,
-  body('phone').isMobilePhone().withMessage('Valid phone number is required'),
+  body('phone').optional().isMobilePhone().withMessage('Valid phone number is required'),
   body('appliedPosition').trim().isLength({ min: 1 }).withMessage('Applied position is required'),
-  body('whyJoin').trim().isLength({ min: 10 }).withMessage('Why join must be at least 10 characters'),
+  body('whyJoin').trim().isLength({ min: 1 }).withMessage('Why join is required'),
   body('experience').optional().trim(),
   body('skills').optional().trim(),
-  body('portfolio').optional().isURL().withMessage('Portfolio must be a valid URL'),
-  body('resume').optional().isURL().withMessage('Resume must be a valid URL'),
+  body('portfolio').optional().trim(),
+  body('resume').optional().trim(),
   body('answers').optional().isArray().withMessage('Answers must be an array'),
   body('answers.*.questionText').optional().trim().isLength({ min: 1 }).withMessage('Answer questionText is required'),
   body('answers.*.answer').optional()
 ], async (req, res) => {
   try {
+    console.log('\n=== APPLICATION SUBMISSION START ===');
+    console.log('User:', req.user ? `${req.user.name} (${req.user.email})` : 'No user');
+    console.log('Recruitment ID:', req.params.recruitmentId);
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Validation errors:', errors.array());
       return res.status(400).json({ 
         message: 'Validation error', 
         errors: errors.array() 
@@ -185,8 +190,11 @@ router.post('/recruitments/:recruitmentId', [
     const { phone, appliedPosition, experience, skills, whyJoin, portfolio, resume, answers } = req.body;
 
     // Check if recruitment exists and is active
+    console.log('Looking up recruitment:', recruitmentId);
     const recruitment = await Recruitment.findById(recruitmentId);
+    console.log('Found recruitment:', recruitment ? `${recruitment.title} (${recruitment.clubName}) - Active: ${recruitment.isActive}` : 'Not found');
     if (!recruitment || !recruitment.isActive) {
+      console.log('Recruitment check failed - not found or inactive');
       return res.status(404).json({ message: 'Recruitment not found or inactive' });
     }
 
@@ -245,14 +253,20 @@ router.post('/recruitments/:recruitmentId', [
     }
 
     // Create application
+    console.log('Creating application with data:');
+    console.log('- Recruitment:', recruitmentId);
+    console.log('- Student:', req.user._id, `(${req.user.name})`);
+    console.log('- Position:', appliedPosition);
+    console.log('- Club:', recruitment.clubName);
+    
     const application = new ClubApplication({
       recruitment: recruitmentId,
       student: req.user._id,
       studentName: req.user.name,
-      rollNumber: req.user.rollNumber,
-      department: req.user.department,
+      rollNumber: req.user.rollNumber || '',
+      department: req.user.department || '',
       email: req.user.email,
-      phone,
+      phone: phone || '',
       appliedPosition,
       experience: experience || '',
       skills: skills || '',
@@ -262,23 +276,31 @@ router.post('/recruitments/:recruitmentId', [
       answers: preparedAnswers
     });
 
+    console.log('Saving application to database...');
     await application.save();
+    console.log('Application saved successfully with ID:', application._id);
 
     const populatedApplication = await ClubApplication.findById(application._id)
       .populate('recruitment', 'title clubName applicationDeadline');
 
+    console.log('Populated application:', populatedApplication);
+    console.log('=== APPLICATION SUBMISSION SUCCESS ===\n');
+    
     res.status(201).json({
       message: 'Application submitted successfully',
       application: populatedApplication
     });
   } catch (error) {
+    console.error('=== APPLICATION SUBMISSION ERROR ===');
     console.error('Club application error:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Stack trace:', error.stack);
+    console.error('=== END ERROR ===\n');
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
 // Get student's club applications
-router.get('/recruitments/my', auth, isStudent, async (req, res) => {
+router.get('/recruitments/my', auth, async (req, res) => {
   try {
     const { limit = 10, page = 1 } = req.query;
 

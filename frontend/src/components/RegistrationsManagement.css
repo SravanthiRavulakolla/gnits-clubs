@@ -169,13 +169,39 @@
   color: #1a202c;
 }
 
-.status-confirmed {
-  background: linear-gradient(135deg, #48bb78, #38b2ac);
+.status-confirmed,
+.status-applied,
+.status-under_review,
+.status-shortlisted,
+.status-selected,
+.status-rejected {
   color: white;
   padding: 2px 8px;
   border-radius: 10px;
   font-size: 0.8rem;
   font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-confirmed,
+.status-applied {
+  background: linear-gradient(135deg, #3182ce, #2b6cb0);
+}
+
+.status-under_review {
+  background: linear-gradient(135deg, #ed8936, #dd6b20);
+}
+
+.status-shortlisted {
+  background: linear-gradient(135deg, #38b2ac, #319795);
+}
+
+.status-selected {
+  background: linear-gradient(135deg, #48bb78, #38a169);
+}
+
+.status-rejected {
+  background: linear-gradient(135deg, #e53e3e, #c53030);
 }
 
 .card-actions {
@@ -298,6 +324,71 @@
 .responses-section h4::before {
   content: "💬";
   font-size: 1.2rem;
+}
+
+.status-actions {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px solid rgba(102, 126, 234, 0.1);
+}
+
+.status-actions h4 {
+  color: #2d3748;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-actions h4::before {
+  content: "⚡";
+  font-size: 1.2rem;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.status-btn {
+  border: none;
+  padding: 8px 16px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.status-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.status-btn.under-review {
+  background: linear-gradient(135deg, #ed8936, #dd6b20);
+}
+
+.status-btn.shortlisted {
+  background: linear-gradient(135deg, #38b2ac, #319795);
+}
+
+.status-btn.selected {
+  background: linear-gradient(135deg, #48bb78, #38a169);
+}
+
+.status-btn.rejected {
+  background: linear-gradient(135deg, #e53e3e, #c53030);
+}
+
+.student-details {
+  color: #718096;
+  font-size: 0.85rem;
+  margin: 2px 0 0 0;
 }
 
 .info-grid {
@@ -473,5 +564,14 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 2px;
+  }
+  
+  .status-buttons {
+    flex-direction: column;
+  }
+  
+  .status-btn {
+    width: 100%;
+    text-align: center;
   }
 }

@@ -21,8 +21,13 @@ const MyRegistrations = () => {
   const fetchRegistrations = async () => {
     try {
       setLoading(true);
+      setError('');
+      
+      console.log('📱 FETCHING MY REGISTRATIONS...');
+      console.log('User:', user.name, user.email);
       
       // Fetch event registrations
+      console.log('Fetching event registrations...');
       const eventsResponse = await fetch(`${API_BASE_URL}/registrations/events/my`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -31,10 +36,14 @@ const MyRegistrations = () => {
 
       if (eventsResponse.ok) {
         const eventsData = await eventsResponse.json();
+        console.log('✅ Event registrations:', eventsData.registrations?.length || 0);
         setEventRegistrations(eventsData.registrations || []);
+      } else {
+        console.warn('Failed to fetch event registrations:', eventsResponse.status);
       }
 
       // Fetch club applications
+      console.log('Fetching club applications...');
       const appsResponse = await fetch(`${API_BASE_URL}/registrations/recruitments/my`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -43,11 +52,16 @@ const MyRegistrations = () => {
 
       if (appsResponse.ok) {
         const appsData = await appsResponse.json();
+        console.log('✅ Club applications:', appsData.applications?.length || 0);
         setClubApplications(appsData.applications || []);
+      } else {
+        console.warn('Failed to fetch club applications:', appsResponse.status);
       }
+      
+      console.log('📱 REGISTRATIONS FETCH COMPLETE');
 
     } catch (error) {
-      setError('Error loading registrations');
+      setError(`Error loading registrations: ${error.message}`);
       console.error('Fetch registrations error:', error);
     } finally {
       setLoading(false);
@@ -113,6 +127,22 @@ const MyRegistrations = () => {
       <div className="registrations-header">
         <h1>My Registrations</h1>
         <p>Track your event registrations and club applications</p>
+        <button 
+          className="refresh-btn"
+          onClick={fetchRegistrations}
+          disabled={loading}
+          style={{
+            background: '#667eea',
+            color: 'white',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '5px',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            margin: '10px 0'
+          }}
+        >
+          {loading ? 'Loading...' : '🔄 Refresh'}
+        </button>
       </div>
 
       {error && <div className="error-message">{error}</div>}

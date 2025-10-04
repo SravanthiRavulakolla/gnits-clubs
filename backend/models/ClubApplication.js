@@ -17,11 +17,13 @@ const clubApplicationSchema = new mongoose.Schema({
   },
   rollNumber: {
     type: String,
-    required: true
+    required: false,
+    default: ''
   },
   department: {
     type: String,
-    required: true
+    required: false,
+    default: ''
   },
   email: {
     type: String,
@@ -29,7 +31,8 @@ const clubApplicationSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: true
+    required: false,
+    default: ''
   },
   appliedPosition: {
     type: String,
