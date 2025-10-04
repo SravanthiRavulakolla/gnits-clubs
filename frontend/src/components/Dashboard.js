@@ -14,19 +14,22 @@ const Dashboard = () => {
       id: 'csi', 
       name: 'CSI', 
       logo: '/logos/csi-logo.jpg',
-      description: 'Computer Society of India - Advancing technology and innovation'
+      description: 'Computer Society of India - Advancing technology and innovation',
+      color: "blue"
     },
     { 
       id: 'gdsc', 
       name: 'GDSC', 
       logo: '/logos/gdsc-logo.png',
-      description: 'Google Developer Student Clubs - Learn, build, and grow together'
+      description: 'Google Developer Student Clubs - Learn, build, and grow together',
+      color: "blue"
     },
     { 
       id: 'aptnus-gana', 
       name: 'Aptnus Gana', 
       logo: '/logos/aptus-gana-logo.jpg',
-      description: 'Cultural and arts club - Express your creativity'
+      description: 'Cultural and arts club - Express your creativity',
+      color: "blue"
     }
   ];
 
