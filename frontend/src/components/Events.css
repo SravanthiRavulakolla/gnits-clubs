@@ -46,7 +46,6 @@
 
 .refresh-btn:hover {
   background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
 }
 
 .refresh-btn:disabled {
@@ -86,7 +85,6 @@
   outline: none;
   background: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
 }
 
 .events-grid {
@@ -109,23 +107,9 @@
   overflow: hidden;
 }
 
-.event-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.5s;
-}
 
-.event-card:hover::before {
-  left: 100%;
-}
 
 .event-card:hover {
-  transform: translateY(-10px) scale(1.02);
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
 }
 
@@ -175,10 +159,11 @@
   font-size: 0.95rem;
   line-height: 1.6;
   margin: 0 0 20px 0;
+  overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .event-info {
@@ -237,23 +222,9 @@
   overflow: hidden;
 }
 
-.register-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
 
-.register-btn:hover::before {
-  left: 100%;
-}
 
 .register-btn:hover {
-  transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(72, 187, 120, 0.3);
 }
 

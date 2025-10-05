@@ -60,7 +60,7 @@
 
 .close-btn:hover {
   background: rgba(229, 62, 62, 0.2);
-  transform: rotate(90deg);
+  cursor: pointer;
 }
 
 .recruitment-summary {

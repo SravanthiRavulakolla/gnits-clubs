@@ -39,7 +39,6 @@
 
 .tab-btn:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
 }
 
 .tab-btn.active {
@@ -125,7 +124,6 @@
 
 .registration-card:hover,
 .application-card:hover {
-  transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   background: rgba(255, 255, 255, 0.95);
 }
@@ -222,7 +220,6 @@
 }
 
 .view-btn:hover {
-  transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
 }
 
@@ -286,7 +283,6 @@
 
 .close-btn:hover {
   background: rgba(229, 62, 62, 0.2);
-  transform: rotate(90deg);
 }
 
 .modal-content {
@@ -365,7 +361,6 @@
 }
 
 .status-btn:hover {
-  transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -452,7 +447,6 @@
 }
 
 .close-modal-btn:hover {
-  transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
 }
 

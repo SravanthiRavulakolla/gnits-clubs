@@ -39,7 +39,7 @@
 
 .back-btn:hover, .post-event-btn:hover {
   background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
+  cursor: pointer;
 }
 
 .event-actions {
@@ -138,7 +138,7 @@
 
 .close-btn:hover {
   background: rgba(229, 62, 62, 0.2);
-  transform: rotate(90deg);
+  cursor: pointer;
 }
 
 .post-event-form input,
@@ -268,7 +268,6 @@
 }
 
 .person-card:hover {
-  transform: translateY(-5px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
@@ -375,7 +374,6 @@
 }
 
 .apply-btn:hover {
-  transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
@@ -476,8 +474,8 @@
 }
 
 .event-card:hover {
-  transform: translateY(-5px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
 }
 
 .event-card h3 {
@@ -545,7 +543,6 @@
 
 .edit-btn:hover,
 .delete-btn:hover {
-  transform: scale(1.05);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
