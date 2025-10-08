@@ -2,7 +2,7 @@
 
 A modern clubs management website for GNITS college with authentication system for students and club admins.
 
-#Link to the ppt: https://www.canva.com/design/DAG1NMoXSEM/2jQXYThv5b-4ln17oKwkmA/edit
+# Link to the ppt: https://www.canva.com/design/DAG1NMoXSEM/2jQXYThv5b-4ln17oKwkmA/edit
 
 ## Features
 
