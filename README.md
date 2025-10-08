@@ -2,6 +2,8 @@
 
 A modern clubs management website for GNITS college with authentication system for students and club admins.
 
+#Link to the ppt: https://www.canva.com/design/DAG1NMoXSEM/2jQXYThv5b-4ln17oKwkmA/edit
+
 ## Features
 
 ### 🎓 For Students
@@ -15,11 +17,8 @@ A modern clubs management website for GNITS college with authentication system f
 - Register as admin for a specific club
 - Manage club events and recruitment drives
 - View student registrations and applications
-- Post announcements and updates
 
 ### 🎨 Modern UI/UX
-- Beautiful gradient backgrounds and animations
-- Glass-morphism design with backdrop blur effects
 - Responsive design for all screen sizes
 - Role-based dashboard views
 - Smooth transitions and hover effects
@@ -38,7 +37,6 @@ A modern clubs management website for GNITS college with authentication system f
 - React Router for navigation
 - Context API for state management
 - Modern CSS with animations
-- Responsive design
 
 ## Setup Instructions
 
