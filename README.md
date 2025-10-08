@@ -106,7 +106,6 @@ A modern clubs management website for GNITS college with authentication system f
 ### Features Available Now
 - ✅ User registration and authentication
 - ✅ Role-based dashboards with beautiful UI
-- ✅ Modern, responsive design with animations
 - ✅ Club browsing for students
 - ✅ **Event Management System**
   - Club admins can create, edit, and delete events
