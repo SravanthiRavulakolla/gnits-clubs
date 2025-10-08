@@ -1,16 +1,21 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useState } from 'react';
 import './Navigation.css';
 
 const Navigation = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   const handleLogout = () => {
     logout();
-    navigate('/auth');
+    setShouldRedirect(true);
+  };
+
+  if (shouldRedirect) {
+    return <Navigate to="/auth" replace />;
   };
 
   const isActive = (path) => {
@@ -19,62 +24,69 @@ const Navigation = () => {
 
   return (
     <nav className="navigation">
-      <div className="nav-brand" onClick={() => navigate('/')}>
+      <Link to="/" className="nav-brand" style={{ textDecoration: 'none', color: 'inherit' }}>
         <img src="/logos/gnits-logo.jpeg" alt="GNITS" className="nav-logo" />
         <span>GNITS Clubs</span>
-      </div>
+      </Link>
 
       <div className="nav-links">
-        <button 
+        <Link 
+          to="/"
           className={`nav-link ${isActive('/')}`}
-          onClick={() => navigate('/')}
+          style={{ textDecoration: 'none' }}
         >
           Dashboard
-        </button>
+        </Link>
         
         {user.role === 'student' && (
           <>
-            <button 
+            <Link 
+              to="/events"
               className={`nav-link ${isActive('/events')}`}
-              onClick={() => navigate('/events')}
+              style={{ textDecoration: 'none' }}
             >
               Events
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/recruitments"
               className={`nav-link ${isActive('/recruitments')}`}
-              onClick={() => navigate('/recruitments')}
+              style={{ textDecoration: 'none' }}
             >
               Recruitments
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/my-registrations"
               className={`nav-link ${isActive('/my-registrations')}`}
-              onClick={() => navigate('/my-registrations')}
+              style={{ textDecoration: 'none' }}
             >
               My Applications
-            </button>
+            </Link>
           </>
         )}
 
         {user.role === 'club_admin' && (
           <>
-            <button 
+            <Link 
+              to="/manage-events"
               className={`nav-link ${isActive('/manage-events')}`}
-              onClick={() => navigate('/manage-events')}
+              style={{ textDecoration: 'none' }}
             >
               Manage Events
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/manage-recruitments"
               className={`nav-link ${isActive('/manage-recruitments')}`}
-              onClick={() => navigate('/manage-recruitments')}
+              style={{ textDecoration: 'none' }}
             >
               Manage Recruitments
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/registrations"
               className={`nav-link ${isActive('/registrations')}`}
-              onClick={() => navigate('/registrations')}
+              style={{ textDecoration: 'none' }}
             >
               View Applications
-            </button>
+            </Link>
           </>
         )}
       </div>

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import './Auth.css';
 
 const Login = ({ onSwitchToRegister }) => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -13,11 +12,9 @@ const Login = ({ onSwitchToRegister }) => {
 
   const { login, loading, isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleChange = (e) => {
     setFormData({

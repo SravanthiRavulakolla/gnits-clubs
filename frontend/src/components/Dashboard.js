@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [adminStats, setAdminStats] = useState(null);
   const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -33,9 +32,6 @@ const Dashboard = () => {
     }
   ];
 
-  const handleClubClick = (clubId) => {
-    navigate(`/club/${clubId}`);
-  };
 
   const handleLogout = () => {
     logout();
@@ -91,10 +87,11 @@ const Dashboard = () => {
             <h2 className="section-title">Explore Our Clubs</h2>
             <div className="clubs-grid">
               {clubs.map((club) => (
-                <div
+                <Link
+                  to={`/club/${club.id}`}
                   key={club.id}
                   className="club-card"
-                  onClick={() => handleClubClick(club.id)}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   <div className="club-logo">
                     <img src={club.logo} alt={`${club.name} Logo`} />
@@ -104,7 +101,7 @@ const Dashboard = () => {
                   <div className="student-actions">
                     <span className="action-hint">Click to explore events & join</span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -117,22 +114,24 @@ const Dashboard = () => {
               <div className="feature-card">
                 <h3>📅 My Registrations</h3>
                 <p>View all your event registrations and club applications</p>
-                <button 
+                <Link 
+                  to="/my-registrations"
                   className="feature-button" 
-                  onClick={() => navigate('/my-registrations')}
+                  style={{ textDecoration: 'none' }}
                 >
                   View My Registrations
-                </button>
+                </Link>
               </div>
               <div className="feature-card">
                 <h3>🎯 Upcoming Events</h3>
                 <p>Don't miss out on exciting events from all clubs</p>
-                <button 
+                <Link 
+                  to="/events"
                   className="feature-button" 
-                  onClick={() => navigate('/events')}
+                  style={{ textDecoration: 'none' }}
                 >
                   View Events
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -150,16 +149,16 @@ const Dashboard = () => {
                     <div className="stat-number">{adminStats.totalEvents || 0}</div>
                     <p>Events created</p>
                   </div>
-                  <div className="stat-card" onClick={() => navigate('/registrations')} style={{cursor: 'pointer'}}>
+                  <Link to="/registrations" className="stat-card" style={{textDecoration: 'none', color: 'inherit', cursor: 'pointer'}}>
                     <h3>👥 Event Registrations</h3>
                     <div className="stat-number">{adminStats.totalRegistrations || 0}</div>
                     <p>Click to view registrations</p>
-                  </div>
-              <div className="stat-card" onClick={() => navigate('/registrations')} style={{cursor: 'pointer'}}>
+                  </Link>
+              <Link to="/registrations" className="stat-card" style={{textDecoration: 'none', color: 'inherit', cursor: 'pointer'}}>
                 <h3>📝 Membership Applications</h3>
                 <div className="stat-number">{adminStats.membershipApplications || 0}</div>
                 <p>Click to view applications</p>
-              </div>
+              </Link>
                   <div className="stat-card">
                     <h3>🎯 Upcoming Events</h3>
                     <div className="stat-number">{adminStats.upcomingEvents || 0}</div>
@@ -185,12 +184,13 @@ const Dashboard = () => {
                     </div>
                   ))}
                 </div>
-                <button 
+                <Link 
+                  to="/registrations"
                   className="view-all-btn"
-                  onClick={() => navigate('/registrations')}
+                  style={{ textDecoration: 'none' }}
                 >
                   View All Applications
-                </button>
+                </Link>
               </div>
             )}
             
@@ -198,32 +198,35 @@ const Dashboard = () => {
               <div className="feature-card">
                 <h3>📅 Manage Events</h3>
                 <p>Create, edit, and delete events for your club</p>
-                <button 
-                  className="feature-button" 
-                  onClick={() => navigate('/manage-events')}
+                <Link 
+                  to="/manage-events"
+                  className="feature-button"
+                  style={{ textDecoration: 'none' }}
                 >
                   Manage Events
-                </button>
+                </Link>
               </div>
               <div className="feature-card">
                 <h3>👥 View Registrations</h3>
                 <p>See who registered for your events</p>
-                <button 
-                  className="feature-button" 
-                  onClick={() => navigate('/registrations')}
+                <Link 
+                  to="/registrations"
+                  className="feature-button"
+                  style={{ textDecoration: 'none' }}
                 >
                   View Registrations
-                </button>
+                </Link>
               </div>
               <div className="feature-card">
                 <h3>🎯 Recruitment Drives</h3>
                 <p>Manage membership recruitment campaigns</p>
-                <button 
-                  className="feature-button" 
-                  onClick={() => navigate('/manage-recruitments')}
+                <Link 
+                  to="/manage-recruitments"
+                  className="feature-button"
+                  style={{ textDecoration: 'none' }}
                 >
                   Manage Recruitments
-                </button>
+                </Link>
               </div>
             </div>
           </div>

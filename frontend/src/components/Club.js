@@ -1,11 +1,10 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Club.css';
 
 const Club = () => {
   const { clubId } = useParams();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const [clubData, setClubData] = useState(null);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
@@ -192,7 +191,7 @@ const Club = () => {
   return (
     <div className="club-page">
       <div className="club-header">
-        <button className="back-btn" onClick={() => navigate('/')}> Back</button>
+        <Link to="/" className="back-btn" style={{ textDecoration: 'none' }}> Back</Link>
         <h1>{clubName}</h1>
         {isAdmin && (
           <button className="post-event-btn" onClick={() => {

@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect } from 'react';
 
 const AuthContext = createContext();
 
-// Initial state
+
 const initialState = {
   user: null,
   token: localStorage.getItem('token'),
@@ -11,7 +11,7 @@ const initialState = {
   error: null
 };
 
-// Actions
+
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'AUTH_LOADING':
@@ -63,13 +63,11 @@ const authReducer = (state, action) => {
   }
 };
 
-// Auth Provider Component
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-  // Check if user is authenticated on app load
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('token');
@@ -144,7 +142,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register function
   const register = async (userData) => {
     dispatch({ type: 'AUTH_LOADING' });
     try {
@@ -181,12 +178,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function
   const logout = () => {
     dispatch({ type: 'LOGOUT' });
   };
 
-  // Clear error function
   const clearError = () => {
     dispatch({ type: 'CLEAR_ERROR' });
   };
@@ -206,7 +201,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook to use auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

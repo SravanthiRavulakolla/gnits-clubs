@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Auth.css';
 
 const AuthPage = () => {
-  const navigate = useNavigate();
   const { isAuthenticated, login, register, loading } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
@@ -19,11 +18,9 @@ const AuthPage = () => {
   });
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;

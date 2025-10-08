@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import './Auth.css';
 
 const Register = ({ onSwitchToLogin }) => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,14 +16,13 @@ const Register = ({ onSwitchToLogin }) => {
   });
   const [error, setError] = useState('');
   const [errors, setErrors] = useState([]);
+  const [shouldNavigate, setShouldNavigate] = useState(false);
 
   const { register, loading, isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
+  if (isAuthenticated || shouldNavigate) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -97,7 +95,7 @@ const Register = ({ onSwitchToLogin }) => {
         setErrors(result.errors);
       }
     } else {
-      navigate('/');
+      setShouldNavigate(true);
     }
   };
 

@@ -41,7 +41,6 @@ const ProtectedRoute = ({ children }) => {
   ) : <Navigate to="/auth" replace />;
 };
 
-// App Routes Component
 const AppRoutes = () => {
   const { isAuthenticated, loading } = useAuth();
   
