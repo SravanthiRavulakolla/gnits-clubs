@@ -168,31 +168,7 @@ const Dashboard = () => {
               </div>
             )}
             
-            {adminStats && adminStats.recentApplications && adminStats.recentApplications.length > 0 && (
-              <div className="recent-applications">
-                <h3>Recent Applications</h3>
-                <div className="applications-preview">
-                  {adminStats.recentApplications.map(app => (
-                    <div key={app._id} className="application-preview-card">
-                      <div className="applicant-info">
-                        <strong>{app.student?.name || app.studentName}</strong>
-                        <span className="recruitment-title">Applied to: {app.recruitment?.title}</span>
-                        <span className="application-date">
-                          {new Date(app.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <Link 
-                  to="/registrations"
-                  className="view-all-btn"
-                  style={{ textDecoration: 'none' }}
-                >
-                  View All Applications
-                </Link>
-              </div>
-            )}
+           
             
             <div className="feature-cards">
               <div className="feature-card">
