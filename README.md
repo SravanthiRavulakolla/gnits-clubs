@@ -14,7 +14,7 @@ A modern clubs management website for GNITS college with authentication system f
 
 ### 👨‍💼 For Club Admins
 - Register as admin for a specific club
-- Manage club events and recruitment drives
+- Manage club events 
 - View student registrations and applications
 - Post announcements and updates
 
