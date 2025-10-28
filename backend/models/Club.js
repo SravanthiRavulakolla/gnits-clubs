@@ -15,14 +15,7 @@ const clubSchema = new mongoose.Schema({
     position: String,
     image: String,
     bio: String
-  }],
-  membershipDrive: {
-    isActive: { type: Boolean, default: false },
-    title: String,
-    description: String,
-    deadline: Date,
-    requirements: [String]
-  }
+  }]
 }, {
   timestamps: true
 });

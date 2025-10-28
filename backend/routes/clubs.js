@@ -134,18 +134,4 @@ router.get('/:clubName', optionalAuth, async (req, res) => {
   }
 });
 
-// Apply for membership
-router.post('/:clubName/apply', auth, async (req, res) => {
-  try {
-    const { clubName } = req.params;
-    const { message } = req.body;
-    
-    // Here you would typically save the application to a database
-    // For now, we'll just return success
-    res.json({ message: 'Application submitted successfully!' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
-
 module.exports = router;

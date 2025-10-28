@@ -9,14 +9,13 @@ A modern clubs management website for GNITS college with authentication system f
 - Register and login with roll number and department
 - Browse all clubs (CSI, GDSC, Aptnus Gana)
 - View club details and upcoming events
-- Register for events and apply to clubs
-- Track registrations and applications
+- Register for events
+- Track event registrations
 
 ### 👨‍💼 For Club Admins
 - Register as admin for a specific club
-- Manage club events 
-- View student registrations and applications
-- Post announcements and updates
+- Manage club events
+- View student event registrations
 
 ### 🎨 Modern UI/UX
 - Beautiful gradient backgrounds and animations
