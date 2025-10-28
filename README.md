@@ -128,38 +128,7 @@ A modern clubs management website for GNITS college with authentication system f
   - Filter by club and event type
   - Date sorting
 
-### In Progress / Coming Soon
-- 🔄 Recruitment drive management (API ready)
-- 🔄 Student club applications (API ready)
-- 🔄 Admin dashboard for viewing registrations
-- 🔄 My Registrations page for students
-- 📝 Image upload for events
-- 📝 Email notifications
-- 📝 Advanced reporting
 
-## Database Schema
-
-### Users Collection
-```javascript
-{
-  name: String,
-  email: String (unique),
-  password: String (hashed),
-  role: 'student' | 'club_admin',
-  // Student fields
-  rollNumber: String (for students),
-  department: String (for students),
-  // Club admin fields
-  clubName: 'CSI' | 'GDSC' | 'Aptnus Gana' (for admins)
-}
-```
-
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - User login
-- `GET /api/auth/me` - Get current user info
 
 ## Project Structure
 ```
@@ -189,10 +158,4 @@ gnits-clubs/
 4. Test thoroughly
 5. Submit a pull request
 
-## Support
 
-For any issues or questions, please contact the development team.
-
----
-
-**Note**: This is the initial version with authentication and basic dashboard. More features like event management, registrations, and notifications will be added in future updates.
