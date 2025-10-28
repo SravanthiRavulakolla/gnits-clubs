@@ -1,4 +1,4 @@
-PPT LINK - https://www.canva.com/design/DAG1NMoXSEM/2jQXYThv5b-4ln17oKwkmA/edit
+PPT LINK - https://www.canva.com/design/DAG1NMoXSEM/50xb_4uoJvLgT4hKkT49dQ/view?utm_content=DAG1NMoXSEM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h3b604ce686
 # GNITS Clubs Website
 
 A modern clubs management website for GNITS college with authentication system for students and club admins.
