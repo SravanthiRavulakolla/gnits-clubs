@@ -8,7 +8,6 @@ const eventRoutes = require('./routes/events');
 const registrationRoutes = require('./routes/registrations');
 const clubRoutes = require('./routes/clubs');
 const adminRoutes = require('./routes/admin');
-const debugRoutes = require('./routes/debug');
 
 const app = express();
 
@@ -30,7 +29,6 @@ app.use('/api/events', eventRoutes);
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/clubs', clubRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/debug', debugRoutes);
 
 // Basic route
 app.get('/api', (req, res) => {
